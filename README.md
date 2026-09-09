@@ -1,64 +1,65 @@
-# 📚 知识库端到端闭环（KB End-to-End）
+# kb-end-to-end · 知识库全生命周期端到端技能
 
-> **中文**：帮你把知识库从「建起来」管到「用起来」再「迭代优化」的完整闭环技能。
->
-> **English**: A complete knowledge base lifecycle skill for AI agents — build, classify, tag, retrieve & archive with quality gates.
+> 一个白皮书 + 一个智能体 + 一个多维表格 = 一套自动运转的个人/企业知识库
 
-## ✨ 功能概览 / Features
+**版本：v1.5 知识网络版**（2026-09-09）
 
-覆盖知识库全生命周期六大阶段，每阶段带质量门禁。
-Covers the full knowledge base lifecycle in six stages, each with quality gates:
+## 这是什么
 
-| 阶段 Stage | 产出 Output | 质量门禁 Quality Gate |
-|------|------|----------|
-| ① 构建 Build | 文件夹架构 + 笔记清单 + MOC + 模板 + 示例 / Folder architecture + note inventory + MOC + templates + examples | MOC 双链 100% 在清单有落点（零死链）/ 100% of MOC links resolve (zero broken links) |
-| ② 识别 Classify | 每篇笔记的 type + 出处 + 置信度 + 处置 / Type + source + confidence + disposition per note | type 全部取自 7 类枚举，无自造 / All types from 7-class enum, none invented |
-| ③ 入库校验 Validate | 结构 / 去重 / 质量 / 密级 四项检查 / Structure, dedup, quality, security checks | 密级超标或来源未授权 → 一票否决 / Over-classified or unauthorized → veto |
-| ④ 打标入库 Tag | 每篇完整 frontmatter / Complete frontmatter per note | 基础层 + 治理层字段完整，无空值 / Full base + governance fields, no empty values |
-| ⑤ 调用路径 Retrieve | 检索式方案 + 工作流触发表 / Retrieval plan + workflow trigger table | 每个业务场景有对应知识挂载 / Every business scenario has knowledge attached |
-| ⑥ 复盘归档 Archive | 复审计划 + 过期策略 + 归档流程 / Review plan + expiry policy + archive flow | 每篇笔记有 valid_until 或标记「长期」/ Every note has valid_until or "long-term" |
+一个让 Agent（如 Coze 扣子智能体）装载后即可搭建并运营知识库的完整技能包，覆盖知识库全生命周期闭环：
 
-**通用适配 / Universally adaptable**: 个人学习库 / 业务知识库 / 项目库 / 研究库，任意领域皆可。
-Personal / business / project / research knowledge bases, any domain.
+**构建 → 识别 → 入库 → 调用 → 复盘归档**，外加存量库治理与自动运营（扫描打标 → 归档 → 查重清理 → 索引落表 → 4 张日程引擎 → 治理三规则），每次交付前由内置 harness 验证器自动校验。
 
-## 🚀 快速开始 / Quick Start
+## v1.5 新增：知识网络层
 
-如果你只需要一个简单知识库，不追求企业级治理：
-For a simple knowledge base without enterprise-grade governance:
+- **指纹引擎**：本地算法（jieba+TF-IDF+n-gram）生成文档混合指纹，零外部 API，内容不出库
+- **相似聚类**：三档阈值分流（重复 >0.92 / 相似 0.85–0.92 / 相关 0.75–0.85）
+- **混合检索**：BM25 + 向量 6:4 融合，答案带原文出处溯源
+- **每周清重 + 月度主题总结**：新增第三条回流线，知识网络每月重组串讲
+- **安全边界**：保护机制 D6（四类资产绝不清理）+ 自动清理授权 D7（仅限完全一致副本，可找回）
 
-1. 文件夹架构 + 笔记清单（零死链）/ Folder architecture + note inventory (zero broken links)
-2. 基础 frontmatter（type + category + tags + status）/ Basic frontmatter
-3. MOC 总索引 / MOC master index
-
-完整企业级治理流程见 `SKILL.md`。See `SKILL.md` for the full enterprise workflow.
-
-## 📁 仓库结构 / Repository Structure
+## 文件结构
 
 ```
 kb-end-to-end/
-├── SKILL.md                      # 技能主文件（含完整执行逻辑与输出模板）/ Main skill file
-├── README.md                     # 说明文档 / Documentation
-├── LICENSE                       # MIT 开源协议 / MIT License
-└── references/
-    ├── type-taxonomy.md          # 知识类型词表(7类) + 企业受控标签词表 + 有效期策略 / Type taxonomy (7 classes) + controlled vocabulary + expiry policy
-    └── example-pipeline.md       # 端到端全链路 Few-shot 样例 / End-to-end few-shot example
+├── SKILL.md                          # 技能主文件（角色/触发/流程/约束）
+├── references/
+│   ├── type-taxonomy.md              # 7 类知识类型枚举与判定
+│   ├── cold-start-guide.md           # 冷启动：从 0 到 1 快速建库
+│   ├── auto-ops-playbook.md          # 自动运营手册（日程引擎+治理规则）
+│   ├── knowledge-network.md          # 知识网络层实现手册（v1.5）
+│   └── example-pipeline.md           # 端到端示例流水线
+└── scripts/
+    └── harness.py                    # 交付前置验证器（H1–H8 静态校验）
 ```
 
-## 🔑 触发场景 / Trigger Scenarios
+## 安装使用
 
-下列关键词任意命中即启用。Triggers on any of the following keywords:
+1. 下载本仓库（Code → Download ZIP，或 `git clone`）
+2. 将 `kb-end-to-end/` 目录放入你的 Agent 技能目录（如 Coze 技能库 / Claude skills）
+3. 对智能体说「帮我搭建知识库」或「治理我的飞书云盘」，技能自动触发
 
-- **建库类 Build**: obsidian知识库 / 创建obsidian库 / obsidian模板 / obsidian双链 / obsidian frontmatter / 生成obsidian笔记 / obsidian目录规划
-- **治理类 Governance**: 知识库闭环 / 知识识别 / 入库标准 / 打标入库 / 知识治理 / 知识调用复用 / 企业知识库管理
-- **生命周期类 Lifecycle**: 知识库复盘 / 知识归档 / 知识复审 / 知识过期
+### harness 验证器单独使用
 
-## 🛡️ 安全说明 / Security
+```bash
+python3 harness.py 方案.md        # 校验方案文档，输出 PASS/FAIL 清单
+# 退出码：0=全部通过可交付；1=存在 FAIL 需修正；2=输入错误
+```
 
-- 纯文本方案输出，**不写库、不调 API、不读写本地文件**，无数据风险
-  Pure text output — no database writes, no API calls, no local file access. Zero data risk.
-- 密级 / 合规等判定需人工最终复核，AI 结果仅供辅助决策
-  Security classification & compliance decisions require human review; AI output is advisory only.
+## 三件套复制公式
 
-## 📄 许可证 / License
+| 组件 | 作用 | 获取 |
+|-|-|-|
+| 一份白皮书 | 系统怎么建、怎么运转的完整 SOP | 见下方配套白皮书 |
+| 一个智能体 | 装载本技能的执行引擎 | 任意支持 Skill 的 Agent 平台 |
+| 一个多维表格 | 13 字段知识索引库 | 按白皮书字段规范自建 |
 
-本项目采用 [MIT License](LICENSE) 开源。Released under the [MIT License](LICENSE).
+> ⚠️ 治理前的基线数据不可复制——每个库要自己扫描出真实起点，这恰恰是复制的第一步。
+
+## 配套白皮书
+
+《知识库自动驾驶产品白皮书》：完整记录这套系统在真实飞书云盘上的落地实况——六层架构、六环节闭环、日程引擎参数、治理三规则、驾驶舱生成方法，以及与飞书原生能力的 8 维度对照。
+
+## 许可与反馈
+
+供个人与企业知识管理场景复制使用；实战验证的改进建议欢迎提 Issue。
